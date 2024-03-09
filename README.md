@@ -1,4 +1,4 @@
-# Actions Builder：
+# Actions Builder
 
 用于在 GitHub Actions 编译固件
 
