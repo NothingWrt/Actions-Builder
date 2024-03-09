@@ -101,15 +101,17 @@ jobs:
 #        path: openwrt/bin
 
     - name: 整理档案
+      id: organize_files
       if: always()
       run: |
         cd openwrt/bin/targets/*/*
         rm -rf packages
         echo "::set-env name=FIRMWARE::$(pwd)"
+        echo "FIRMWARE=$(pwd)" >> $GITHUB_OUTPUT
 
     - name: 上载固件
       uses: actions/upload-artifact@master
       if: always()
       with:
         name: OpenWrt_firmware
-        path: ${{ env.FIRMWARE }}
+        path: ${{ steps.organize_files.outputs.FIRMWARE }}
