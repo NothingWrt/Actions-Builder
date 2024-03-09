@@ -12,6 +12,14 @@ on:
       - master
     paths:
       - 'RAX3000M_NAND.config'
+  workflow_dispatch:
+    inputs:
+     trigger:
+        description: Manually trigger
+        required: true
+        type: choice
+        options:
+         - release
 #  schedule:
 #    - cron: 0 20 1 * *
 #  watch:
