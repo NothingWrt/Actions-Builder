@@ -25,6 +25,9 @@ on:
 #  watch:
 #    types: [started]
 
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
 jobs:
   build:
     runs-on: ubuntu-20.04
