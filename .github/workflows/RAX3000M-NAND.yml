@@ -1,8 +1,8 @@
 #=================================================
-#  RAX3000M NAND & eMMC
+#  RAX3000M NAND
 #=================================================
 
-name: RAX3000M NAND & eMMC
+name: RAX3000M NAND
 
 on: 
   release:
@@ -11,7 +11,7 @@ on:
     branches: 
       - master
     paths:
-      - 'RAX3000M.config'
+      - 'RAX3000M-NAND.config'
   workflow_dispatch:
     inputs:
      trigger:
@@ -65,7 +65,7 @@ jobs:
 
     - name: 加载自定义配置
       env:
-        CONFIG_FILE: 'RAX3000M.config'
+        CONFIG_FILE: 'RAX3000M-NAND.config'
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
