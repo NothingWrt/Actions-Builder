@@ -115,43 +115,12 @@ jobs:
         echo "::set-env name=FIRMWARE::$(pwd)"
         echo "FIRMWARE=$(pwd)" >> $GITHUB_OUTPUT
 
-    - name: 创建 Tag
-      id: release_tag
-      run: |
-        git tag -a RAX3000M-${{ steps.timestamp.outputs.date }} -m "Release RAX3000M-${{ steps.timestamp.outputs.date }}" 
-        git push --tags
-        echo "tag_name=RAX3000M-${{ steps.timestamp.outputs.date }}" >> $GITHUB_OUTPUT
-
-    - name: 生成 Release 信息
-      id: info
-      if: steps.build.outputs.status == 'success'
-      run: |
-          echo "${{ steps.release_tag.outputs.tag_name }}" >> release.txt
-          echo "" >> release.txt
-          echo "${{ secrets.RELEASE_INFO }}" >> release.txt
-          echo "" >> release.txt
-          echo "Build time: ${{ steps.timestamp.outputs.date }}" >> release.txt
-          echo "Telegram: https://t.me/NothingWrt" >> release.txt
-          touch release.txt
-          echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: 上传固件并发布 Release
-      uses: softprops/action-gh-release@v1
-      if: steps.info.outputs.status == 'success'
-      env:
-          GITHUB_TOKEN: ${{ secrets.G1THUB_TOKEN }}
+    - name: 上载固件
+      uses: actions/upload-artifact@master
+      if: always()
       with:
-          prerelease: ${{ secrets.PRERELEASE }}
-          tag_name: ${{ steps.release_tag.outputs.tag_name }}
-          body_path: release.txt
-          files: ${{ steps.organize_files.outputs.FIRMWARE }}/*
-
-        #    - name: 上载固件
-        #uses: actions/upload-artifact@master
-        #if: always()
-        #with:
-        #name: OpenWrt_firmware_${{ steps.timestamp.outputs.date }}
-        #path: ${{ steps.organize_files.outputs.FIRMWARE }}
+        name: OpenWrt_firmware_${{ steps.timestamp.outputs.date }}
+        path: ${{ steps.organize_files.outputs.FIRMWARE }}
 
     - name: Telegram 通知
       uses: appleboy/telegram-action@master
@@ -161,6 +130,5 @@ jobs:
         message: |
             Actions-Builder 编译完成！
 
-            ${{ steps.release_tag.outputs.tag_name }}
-           
-            https://github.com/NothingWrt/Actions-Builder/releases/tag/${{ steps.release_tag.outputs.tag_name }}
+            ${{ steps.timestamp.outputs.date }}
+          
